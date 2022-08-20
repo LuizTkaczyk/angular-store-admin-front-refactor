@@ -1,0 +1,40 @@
+<div class="container">
+
+
+    <div class="sidenav">
+        <img class="avatar mat-elevation-z8" src="./../../assets/luma.jpg" />
+
+        <h4 class="name">Admin luma</h4>
+
+        <mat-divider></mat-divider>
+
+        <button mat-button class="menu-button" routerLink="/venda" routerLinkActive="active">
+            <mat-icon>home</mat-icon>
+            <span>Home</span>
+        </button>
+        <button mat-button class="menu-button" routerLink="/cadastro" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+            <span>Cadastrar produtos</span>
+        </button>
+        <button mat-button class="menu-button" routerLink="/produtos" routerLinkActive="active">
+            <mat-icon>info</mat-icon>
+            <span>Lista de produtos</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <button mat-button class="menu-button" routerLink="/configuracoes" routerLinkActive="active">
+            <mat-icon>help</mat-icon>
+            <span>Configurações</span>
+        </button>
+    </div>
+
+    <div class="content">
+
+        <div class="inside-container">
+            <router-outlet></router-outlet>
+        </div>
+
+
+    </div>
+</div>
