@@ -1,6 +1,37 @@
-:host{
+:host {
   width: 100%
 }
+
 table {
   width: 100%;
 }
+
+.table-container {
+  display: grid;
+  grid-template-areas: 'header' 'main' 'paginator';
+  // grid-template-columns: ;
+
+  .header {
+    grid-area: header;
+    grid-row: 1;
+  }
+
+  .content {
+    grid-area: main;
+    grid-row: 2;
+    height:80vh;
+  }
+
+  .paginator {
+    grid-area: paginator;
+    grid-row:3;
+  }
+
+
+}
+
+// .section-container{
+//   position: relative;
+//   max-height: 82vh !important;
+//   overflow: auto;
+// }
