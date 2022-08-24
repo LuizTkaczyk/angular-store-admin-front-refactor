@@ -1,1 +1,64 @@
-<p>Cadastro de produtos!</p>
+<div class="container">
+    <mat-card class="example-card">
+        <mat-card-header>
+            <div mat-card-avatar></div>
+            <mat-card-title>Cadastro de produtos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="form" [formGroup]="form">
+                <form action="form-fieds">
+                    <mat-form-field id="name" appearance="outline">
+                        <mat-label>Nome do produto</mat-label>
+                        <input formControlName="name" id="name" matInput #name placeholder="Ex. Blusa de inverno"
+                            value="{{999|  currency }}">
+                        <mat-error *ngIf="errorMessage('name')">
+                            O nome é obrigatório!
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field id="value" appearance="outline">
+                        <mat-label>Valor pago</mat-label>
+                        <input formControlName="value" matInput #value placeholder="Ex. 21,99"
+                            (keypress)="onlyNumbersInput($event)" >
+                        <mat-error *ngIf="errorMessage('value')">
+                            O valor pago é obrigatorio!
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field id="quantity" appearance="outline">
+                        <mat-label>Quantidade</mat-label>
+                        <input formControlName="quantity" matInput #quantity placeholder="Ex. 10"
+                            (keypress)="onlyNumbersInput($event, true)">
+                        <mat-error *ngIf="errorMessage('quantity')">
+                            A quantidade é obrigatória!
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field id="buy-value" appearance="outline">
+                        <mat-label>Valor total da compra</mat-label>
+                        <input formControlName="buyValue" matInput #buy_value>
+                    </mat-form-field>
+                    <mat-form-field id="percentage" appearance="outline">
+                        <mat-label>Margem de lucro</mat-label>
+                        <input formControlName="percentage" matInput #percentage placeholder="Ex 20%"
+                            (keypress)="onlyNumbersInput($event)">
+                        <mat-error *ngIf="errorMessage('percentage')">
+                            A margem de lucro é obrigatória!
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field id="sell-value" appearance="outline">
+                        <mat-label>Valor de venda</mat-label>
+                        <input formControlName="sellValue" matInput #sell_value>
+                    </mat-form-field>
+                    <mat-form-field id="code" appearance="outline">
+                        <mat-label>Código do produto</mat-label>
+                        <input formControlName="code" matInput #code>
+                    </mat-form-field>
+                </form>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button id="save-button" mat-raised-button color="primary" (click)="onSubmit()"
+                [disabled]="!form.valid">Salvar</button>
+            <button id="save-button" mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

@@ -1,0 +1,32 @@
+.mat-form-field{
+    margin:4px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+
+    .form{
+        //border: 1px solid black;
+        border-radius: 10px;
+        width: 100%;
+        // margin: auto;
+    }
+    #name {
+        width: 200px;
+    }
+
+    #value {
+        width: 100px;
+    }
+
+    #quantity {
+        width: 100px;
+    }
+
+    #save-button {
+        width: 90px;
+        margin: 4px;
+    }
+}
