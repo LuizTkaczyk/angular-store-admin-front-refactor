@@ -1,5 +1,5 @@
 import { SharedService } from './../../shared/shared.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Route } from 'src/app/shared/app-const';
 import { CurrencyPipe } from '@angular/common';
@@ -10,40 +10,43 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+  @ViewChild('value') value: any = ElementRef;
+  @ViewChild('quantity') quantity: any = ElementRef;
+  @ViewChild('buy_value') buy_value: any = ElementRef;
+  @ViewChild('sell_value') sell_value: any = ElementRef;
 
   form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private sharedService: SharedService,
-    private currencyPipe : CurrencyPipe
+    private currencyPipe: CurrencyPipe
   ) {
     this.form = this.formBuilder.group({
       name: [null, [Validators.required, Validators.minLength(3)]],
       value: [null, [Validators.required, Validators.pattern(/[0-9\+\-\ ]/)]],
-      quantity: [null, Validators.required],
+      quantity: [null, [Validators.required, Validators.minLength(1)]],
       buyValue: [null],
       percentage: [null, Validators.required],
       sellValue: [null],
       code: [null]
     });
 
-    // this.form.valueChanges.subscribe( form =>{
-    //   if(form.value){
-    //     this.form.patchValue({
-    //       value: this.currencyPipe.transform(form.value.replace(/\D/g, '').replace(/^0+/, ''), 'BRL', 'symbol', '1.0','pt')
-    //     }, {emitEvent:false})
-    //   }
-    // })
-
   }
 
   ngOnInit(): void {
+    this.form.controls['quantity'].setValue(1);
   }
 
   onSubmit() {
-    //this.sharedService.post(Route.CREATE_PRODUCT, this.form.value).subscribe();
-    console.log(this.form.value)
+    this.form.patchValue({
+      value: Number(this.value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
+      sellValue: Number(this.sell_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
+      buyValue: Number(this.buy_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
+      code:999
+    })
+    this.sharedService.post(Route.CREATE_PRODUCT, this.form.value).subscribe();
+    this.form.reset();
   }
 
   onCancel() {
@@ -68,5 +71,26 @@ export class RegisterComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  formatCurrency(element: any) {
+    let value = element.target.value.replaceAll(',', '.');
+    let formatedValue = this.currencyPipe.transform(Number(value), 'BRL', 'symbol');
+    element.target.value = formatedValue;
+  }
+
+  totalAmountPaid(value: any) {
+    let valueAmount = this.value.nativeElement.value;
+    valueAmount = valueAmount.replaceAll('R$', '').replaceAll(',', '.');
+    let total = value * valueAmount;
+    let totalFormated = this.currencyPipe.transform(Number(total), 'BRL', 'symbol');
+    return this.form.patchValue({ buyValue: totalFormated })
+  }
+
+  salePrice(value: any) {
+    let amountPaid = Number(this.form.value.value.replaceAll(',', '.'));
+    let finalPrice = ((value / 100) * amountPaid) + amountPaid;
+    let totalFormated = this.currencyPipe.transform(finalPrice, 'BRL', 'symbol');
+    return this.form.patchValue({ sellValue: totalFormated });
   }
 }
