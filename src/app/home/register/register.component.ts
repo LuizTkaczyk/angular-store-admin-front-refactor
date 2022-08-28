@@ -3,6 +3,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Route } from 'src/app/shared/app-const';
 import { CurrencyPipe } from '@angular/common';
+import { AlertsService } from 'src/app/shared/alerts.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +22,9 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private sharedService: SharedService,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    private alert: AlertsService,
+    private router :Router
   ) {
     this.form = this.formBuilder.group({
       name: [null, [Validators.required, Validators.minLength(3)]],
@@ -36,6 +40,13 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.form.controls['quantity'].setValue(1);
+    this.randomCode();
+  }
+
+  randomCode(){
+    this.sharedService.get(Route.CODE).subscribe((code)=>{
+      this.form.controls['code'].setValue(code);
+    })
   }
 
   onSubmit() {
@@ -43,10 +54,18 @@ export class RegisterComponent implements OnInit {
       value: Number(this.value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
       sellValue: Number(this.sell_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
       buyValue: Number(this.buy_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
-      code:999
+      percentage: Number(this.form.value.percentage),
     })
-    this.sharedService.post(Route.CREATE_PRODUCT, this.form.value).subscribe();
-    this.form.reset();
+    this.sharedService.post(Route.CREATE_PRODUCT, this.form.value).subscribe(
+      success => {
+        this.alert.showSuccessMessage('Produto salvo!', 'Sucesso!')
+      }, 
+      error => {
+        this.alert.showErrorMessage('Erro ao salvar o produto!', 'Atenção!')
+      }
+      );
+      this.form.reset();
+      this.randomCode();
   }
 
   onCancel() {

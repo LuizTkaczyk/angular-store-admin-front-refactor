@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import ptBr from '@angular/common/locales/pt';
 import { registerLocaleData, CurrencyPipe } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
 
 registerLocaleData(ptBr);
 
@@ -24,7 +25,7 @@ registerLocaleData(ptBr);
     RegisterComponent,
     ListComponent,
     ConfigComponent,
-    SaleComponent
+    SaleComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,11 +33,12 @@ registerLocaleData(ptBr);
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'pt'},
-    { provide:DEFAULT_CURRENCY_CODE, useValue:'BRL'},
+    { provide: LOCALE_ID, useValue: 'pt' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
     CurrencyPipe
   ],
   bootstrap: [AppComponent]

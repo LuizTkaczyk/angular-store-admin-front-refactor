@@ -13,14 +13,48 @@ table {
   height: 100%;
   margin: 10px;
 
-  .header {}
-
   .section-table {
     overflow: auto;
     height: calc(80vh - 3px);
   }
 
-  :host ::ng-deep.mat-paginator .mat-paginator-container{
+  :host ::ng-deep.mat-paginator .mat-paginator-container {
     justify-content: flex-start;
   }
+}
+
+td {
+  text-align: center;
+}
+
+th.mat-header-cell {
+  text-align: center;
+}
+
+mat-icon {
+  margin-right: 15px;
+}
+
+td.mat-cell:last-of-type {
+  padding-right: 0;
+}
+
+td.mat-cell:first-of-type {
+  padding-left: 0;
+}
+
+th.mat-header-cell:last-of-type{
+  padding-right: 0;
+}
+
+th.mat-header-cell:first-of-type{
+  padding-left: 0;
+}
+
+td.mat-footer-cell:last-of-type {
+  padding-right: 0;
+}
+
+td.mat-footer-cell:first-of-type {
+  padding-left: 0;
 }

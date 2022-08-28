@@ -10,38 +10,56 @@
             <ng-container matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef>Produto</th>
                 <td mat-cell *matCellDef="let product"> {{product.name}} </td>
-                <td mat-footer-cell *matFooterCellDef> Total </td>
+                <td mat-footer-cell *matFooterCellDef> Totais </td>
             </ng-container>
 
 
-            <ng-container matColumnDef="buy_value">
-                <th mat-header-cell *matHeaderCellDef>Valor compra</th>
-                <td mat-cell *matCellDef="let product"> {{product.buy_value}} </td>
-                <td mat-footer-cell *matFooterCellDef></td>
-            </ng-container>
-
-            <ng-container matColumnDef="sell_value">
-                <th mat-header-cell *matHeaderCellDef>Valor venda</th>
-                <td mat-cell *matCellDef="let product"> {{product.sell_value}} </td>
+            <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Valor pago no fornecedor do produto.">Valor compra
+                </th>
+                <td mat-cell *matCellDef="let product"> {{product.value | currency}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="percentage">
-                <th mat-header-cell *matHeaderCellDef>Lucro %</th>
+                <th mat-header-cell *matHeaderCellDef
+                    matTooltip="Lucro em porcentagem sobre o valor pago ao fornecedor.">Lucro %</th>
                 <td mat-cell *matCellDef="let product"> {{product.percentage}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
-            <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef>Quantidade </th>
-                <td mat-cell *matCellDef="let product"> {{product.quantity}} </td>
+            <ng-container matColumnDef="sell_value">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Valor do produto que será vendido ao cliente.">Valor
+                    venda</th>
+                <td mat-cell *matCellDef="let product"> {{product.sell_value | currency}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Quantidade adquirida do fornecedor.">Quantidade </th>
+                <td mat-cell *matCellDef="let product"> {{product.quantity}} </td>
+                <td mat-footer-cell *matFooterCellDef matTooltip="Quantidade total de produtos adquiridos.">
+                    {{this.totalQuantity}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="buy_value">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Valor total da compra realizada no fornecedor.">Total
+                    da compra </th>
+                <td mat-cell *matCellDef="let product"> {{product.buy_value | currency}} </td>
+                <td mat-footer-cell *matFooterCellDef matTooltip="Soma total das compras realizadas nos fornecedores.">
+                    {{this.totalBuy | currency}}</td>
             </ng-container>
 
             <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef>Código</th>
                 <td mat-cell *matCellDef="let product"> {{product.code}} </td>
-                <td mat-footer-cell *matFooterCellDef> 999,99 </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Ações</th>
+                <td mat-cell *matCellDef="let product"><mat-icon>edit</mat-icon> <mat-icon>delete</mat-icon> </td>
+                <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
