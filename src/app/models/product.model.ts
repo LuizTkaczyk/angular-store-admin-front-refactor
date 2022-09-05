@@ -3,8 +3,8 @@ export interface Product {
     name:string;
     value:number;
     quantity:number;
-    buyValue:number;
+    buy_value:number;
     percentage:number;
-    sellValue:number;
+    sell_value:number;
     code:string;
 }

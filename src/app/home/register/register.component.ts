@@ -1,3 +1,4 @@
+import { FormatValuesService } from './../../shared/format-values.service';
 import { SharedService } from './../../shared/shared.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -13,9 +14,6 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   @ViewChild('value') value: any = ElementRef;
-  @ViewChild('quantity') quantity: any = ElementRef;
-  @ViewChild('buy_value') buy_value: any = ElementRef;
-  @ViewChild('sell_value') sell_value: any = ElementRef;
 
   form: FormGroup;
 
@@ -24,7 +22,8 @@ export class RegisterComponent implements OnInit {
     private sharedService: SharedService,
     private currencyPipe: CurrencyPipe,
     private alert: AlertsService,
-    private router :Router
+    private router: Router,
+    private formatValue: FormatValuesService
   ) {
     this.form = this.formBuilder.group({
       name: [null, [Validators.required, Validators.minLength(3)]],
@@ -43,29 +42,29 @@ export class RegisterComponent implements OnInit {
     this.randomCode();
   }
 
-  randomCode(){
-    this.sharedService.get(Route.CODE).subscribe((code)=>{
+  randomCode() {
+    this.sharedService.get(Route.CODE).subscribe((code) => {
       this.form.controls['code'].setValue(code);
     })
   }
 
   onSubmit() {
     this.form.patchValue({
-      value: Number(this.value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
-      sellValue: Number(this.sell_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
-      buyValue: Number(this.buy_value.nativeElement.value.replaceAll(',','.').replaceAll('R$','')),
+      value: Number(this.form.controls['value'].value.replaceAll(',', '.').replaceAll('R$', '')),
+      sellValue: Number(this.form.controls['sellValue'].value.replaceAll(',', '.').replaceAll('R$', '')),
+      buyValue: Number(this.form.controls['buyValue'].value.replaceAll(',', '.').replaceAll('R$', '')),
       percentage: Number(this.form.value.percentage),
     })
-    this.sharedService.post(Route.CREATE_PRODUCT, this.form.value).subscribe(
+    this.sharedService.post(Route.PRODUCT, this.form.value).subscribe(
       success => {
         this.alert.showSuccessMessage('Produto salvo!', 'Sucesso!')
-      }, 
+      },
       error => {
         this.alert.showErrorMessage('Erro ao salvar o produto!', 'Atenção!')
       }
-      );
-      this.form.reset();
-      this.randomCode();
+    );
+    this.form.reset();
+    this.randomCode();
   }
 
   onCancel() {
@@ -77,39 +76,32 @@ export class RegisterComponent implements OnInit {
   }
 
   onlyNumbersInput(event: any, float?: boolean) {
-    let charCode = (event.which) ? event.which : event.keyCode;
-    if (!float) {
-      if (charCode != 46 && charCode > 31 && charCode != 44 && (charCode < 48 || charCode > 57)) {
-        event.preventDefault();
-        return false;
-      }
-    } else {
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        event.preventDefault();
-        return false;
-      }
-    }
-    return true;
+    this.formatValue.onlyNumbersInput(event, float);
   }
 
-  formatCurrency(element: any) {
-    let value = element.target.value.replaceAll(',', '.');
-    let formatedValue = this.currencyPipe.transform(Number(value), 'BRL', 'symbol');
-    element.target.value = formatedValue;
+  formatCurrency(value: any) {
+    this.form.controls['value'].setValue(this.formatValue.formatCurrency(value));
+
+    this.form.controls['sellValue'].setValue(this.formatValue.salePrice(
+      this.form.controls['percentage'].value,  
+      this.form.controls['value'].value));
+    
+    this.form.controls['buyValue'].setValue(this.formatValue.totalAmountPaid(
+      this.form.controls['value'].value,
+      this.form.controls['quantity'].value)
+    );
   }
 
-  totalAmountPaid(value: any) {
-    let valueAmount = this.value.nativeElement.value;
-    valueAmount = valueAmount.replaceAll('R$', '').replaceAll(',', '.');
-    let total = value * valueAmount;
-    let totalFormated = this.currencyPipe.transform(Number(total), 'BRL', 'symbol');
-    return this.form.patchValue({ buyValue: totalFormated })
+  totalAmountPaid() {
+    this.form.controls['buyValue'].setValue(
+      this.formatValue.totalAmountPaid(
+        this.form.controls['value'].value,
+        this.form.controls['quantity'].value
+      )
+    );
   }
 
-  salePrice(value: any) {
-    let amountPaid = Number(this.form.value.value.replaceAll(',', '.'));
-    let finalPrice = ((value / 100) * amountPaid) + amountPaid;
-    let totalFormated = this.currencyPipe.transform(finalPrice, 'BRL', 'symbol');
-    return this.form.patchValue({ sellValue: totalFormated });
+  salePrice(percentage: any) {
+    this.form.controls['sellValue'].setValue(this.formatValue.salePrice(percentage,  this.form.controls['value'].value));
   }
 }

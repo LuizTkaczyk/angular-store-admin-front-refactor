@@ -1,3 +1,4 @@
+import { SocketService } from './../../shared/socket.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SaleComponent implements OnInit {
 
-  constructor() { }
+  constructor(private socket : SocketService) { }
 
   ngOnInit(): void {
+    this.socket.start();
   }
 
 }

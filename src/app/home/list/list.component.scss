@@ -4,6 +4,7 @@
 
 table {
   width: 100%;
+  background: #e1d7d7;
 }
 
 .container {
@@ -11,11 +12,11 @@ table {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin: 10px;
-
+  
   .section-table {
     overflow: auto;
     height: calc(80vh - 3px);
+    border-radius: 10px;
   }
 
   :host ::ng-deep.mat-paginator .mat-paginator-container {
@@ -23,12 +24,9 @@ table {
   }
 }
 
-td {
-  text-align: center;
-}
-
 th.mat-header-cell {
   text-align: center;
+  color: black;
 }
 
 mat-icon {
@@ -37,6 +35,7 @@ mat-icon {
 
 td.mat-cell:last-of-type {
   padding-right: 0;
+  color: black;
 }
 
 td.mat-cell:first-of-type {
@@ -57,4 +56,93 @@ td.mat-footer-cell:last-of-type {
 
 td.mat-footer-cell:first-of-type {
   padding-left: 0;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.expand-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.mat-icon-button i, .mat-icon-button .mat-icon{
+  margin: 0 auto;
+}
+
+.products-row{
+  text-align: center;
+}
+
+::ng-deep .mat-card-header-text {
+  /* CSS styles go here */
+  margin: 0 0px !important; // for example to remove the margin
+}
+
+.edit-container{
+  margin: 15px;
+  width: 100%;
+}
+
+.fields{
+  margin-right: 10px;
+  width: 130px;
+}
+
+#name{
+  width: 250px;
+}
+
+.edit-row{
+  width: 80px;
+}
+
+.expand-element-detail{
+  background-color: #78787840;
+}
+
+.mat-card-actions {
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 0;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+  box-shadow: unset;
 }

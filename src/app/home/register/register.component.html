@@ -1,16 +1,14 @@
 <div class="container">
     <mat-card class="example-card">
-        <mat-card-header>
-            <div mat-card-avatar></div>
-            <mat-card-title>Cadastro de produtos</mat-card-title>
+        <mat-card-header class="teste">
+            <mat-card-title class="teste">Cadastro de produtos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <div class="form" [formGroup]="form">
                 <form action="form-fieds">
                     <mat-form-field id="name" appearance="outline">
                         <mat-label>Nome do produto</mat-label>
-                        <input formControlName="name" id="name" matInput #name placeholder="Ex. Blusa de inverno"
-                            value="{{999|  currency }}">
+                        <input formControlName="name" id="name" matInput #name placeholder="Ex. Blusa de inverno">
                         <mat-error *ngIf="errorMessage('name')">
                             O nome é obrigatório!
                         </mat-error>
@@ -19,15 +17,18 @@
                     <mat-form-field id="value" appearance="outline">
                         <mat-label>Valor pago</mat-label>
                         <input formControlName="value" matInput #value placeholder="Ex. 21,99"
-                            (keypress)="onlyNumbersInput($event)" (blur)="formatCurrency($event)" (keyup)="totalAmountPaid(quantity.value)">
-                        <mat-error *ngIf="errorMessage('value')">
+                            (blur)="formatCurrency(value.value)"
+                            (keypress)="onlyNumbersInput($event)"
+                            >
+                            <mat-error *ngIf="errorMessage('value')">
                             O valor pago é obrigatorio!
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field id="quantity" appearance="outline">
                         <mat-label>Quantidade</mat-label>
                         <input formControlName="quantity" matInput #quantity placeholder="Ex. 10"
-                            (keypress)="onlyNumbersInput($event, true)" (keyup)="totalAmountPaid(quantity.value)" [value]="1">
+                            (keypress)="onlyNumbersInput($event, true)" (keyup)="totalAmountPaid()"
+                            [value]="1">
                         <mat-error *ngIf="errorMessage('quantity')">
                             A quantidade é obrigatória!
                         </mat-error>
@@ -50,7 +51,7 @@
                     </mat-form-field>
                     <mat-form-field id="code" appearance="outline">
                         <mat-label>Código do produto</mat-label>
-                        <input formControlName="code" matInput #code readonly >
+                        <input formControlName="code" matInput #code readonly>
                     </mat-form-field>
                 </form>
             </div>

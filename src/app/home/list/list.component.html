@@ -1,70 +1,162 @@
 <div class="container">
-
-    <header class="header">
-        <p>lista de produtos</p>
-    </header>
-
+    <mat-card class="example-card">
+        <mat-card-header>
+            <mat-card-title>Lista de produtos</mat-card-title>
+        </mat-card-header>
+    </mat-card>
     <section class="section-table" tabindex="0">
-        <table mat-table [dataSource]="products" class="mat-elevation-z8">
+        <table mat-table [dataSource]="products" class="mat-elevation-z8" multiTemplateDataRows>
 
             <ng-container matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef>Produto</th>
-                <td mat-cell *matCellDef="let product"> {{product.name}} </td>
-                <td mat-footer-cell *matFooterCellDef> Totais </td>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.name}} </td>
+                <td mat-footer-cell *matFooterCellDef class="products-row"> Totais </td>
             </ng-container>
 
 
             <ng-container matColumnDef="value">
                 <th mat-header-cell *matHeaderCellDef matTooltip="Valor pago no fornecedor do produto.">Valor compra
                 </th>
-                <td mat-cell *matCellDef="let product"> {{product.value | currency}} </td>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.value | currency}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="percentage">
                 <th mat-header-cell *matHeaderCellDef
                     matTooltip="Lucro em porcentagem sobre o valor pago ao fornecedor.">Lucro %</th>
-                <td mat-cell *matCellDef="let product"> {{product.percentage}} </td>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.percentage}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="sell_value">
-                <th mat-header-cell *matHeaderCellDef matTooltip="Valor do produto que será vendido ao cliente.">Valor
+                <th mat-header-cell *matHeaderCellDef matTooltip="Valor do produto que será vendido ao cliente.">
+                    Valor
                     venda</th>
-                <td mat-cell *matCellDef="let product"> {{product.sell_value | currency}} </td>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.sell_value | currency}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef matTooltip="Quantidade adquirida do fornecedor.">Quantidade </th>
-                <td mat-cell *matCellDef="let product"> {{product.quantity}} </td>
-                <td mat-footer-cell *matFooterCellDef matTooltip="Quantidade total de produtos adquiridos.">
+                <th mat-header-cell *matHeaderCellDef matTooltip="Quantidade adquirida do fornecedor.">Quantidade
+                </th>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.quantity}} </td>
+                <td mat-footer-cell *matFooterCellDef class="products-row"
+                    matTooltip="Quantidade total de produtos adquiridos.">
                     {{this.totalQuantity}}</td>
             </ng-container>
 
             <ng-container matColumnDef="buy_value">
-                <th mat-header-cell *matHeaderCellDef matTooltip="Valor total da compra realizada no fornecedor.">Total
+                <th mat-header-cell *matHeaderCellDef matTooltip="Valor total da compra realizada no fornecedor.">
+                    Total
                     da compra </th>
-                <td mat-cell *matCellDef="let product"> {{product.buy_value | currency}} </td>
-                <td mat-footer-cell *matFooterCellDef matTooltip="Soma total das compras realizadas nos fornecedores.">
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.buy_value | currency}} </td>
+                <td mat-footer-cell *matFooterCellDef class="products-row"
+                    matTooltip="Soma total das compras realizadas nos fornecedores.">
                     {{this.totalBuy | currency}}</td>
             </ng-container>
 
             <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef>Código</th>
-                <td mat-cell *matCellDef="let product"> {{product.code}} </td>
+                <td mat-cell *matCellDef="let product" class="products-row"> {{product.code}} </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef>Ações</th>
-                <td mat-cell *matCellDef="let product"><mat-icon>edit</mat-icon> <mat-icon>delete</mat-icon> </td>
+            <ng-container matColumnDef="expand">
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions">Editar</th>
+                <td mat-cell *matCellDef="let product" class="products-row">
+                    <button mat-icon-button aria-label="expand row"
+                        matTooltip="Opções para editar ou excluir o produto."
+                        (click)="products.id = products.id === product.id  ? null : product.id; $event.stopPropagation() ; ">
+                        <mat-icon *ngIf="products.id !== product.id" (click)="editItem(product.id)">keyboard_arrow_down
+                        </mat-icon>
+                        <mat-icon *ngIf="products.id === product.id">keyboard_arrow_up</mat-icon>
+                    </button>
+                </td>
                 <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky:true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let product" [attr.colspan]="columnsToDisplayWithExpand.length"
+                    class="expand">
+                    <div class="expand-element-detail"
+                        [@detailExpand]=" product.id === products.id ? 'expanded' : 'collapsed'">
+
+                        <!-- ****************************************** -->
+                        <div class="edit-container">
+                            <mat-card-header>
+                                <mat-card-title>Editar {{product.name}}</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <div class="form">
+                                    <form action="form-fieds" [formGroup]="formEdit">
+                                        <mat-form-field class="fields" id="name" appearance="outline">
+                                            <mat-label>Nome do produto</mat-label>
+                                            <input formControlName="name" id="name" matInput #name
+                                                placeholder="Ex. Blusa de inverno">
+                                            <mat-error *ngIf="errorMessage('name')">
+                                                O nome é obrigatório!
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="fields" id="value" appearance="outline">
+                                            <mat-label>Valor pago</mat-label>
+                                            <input formControlName="value" matInput #value placeholder="Ex. 21,99"
+                                            (blur)="formatCurrency(value.value)"
+                                            (keypress)="onlyNumbersInput($event)">
+                                            <mat-error *ngIf="errorMessage('value')">
+                                                O valor pago é obrigatorio!
+                                            </mat-error>
+
+                                        </mat-form-field>
+                                        <mat-form-field class="fields" id="quantity" appearance="outline">
+                                            <mat-label>Quantidade</mat-label>
+                                            <input formControlName="quantity" matInput #quantity placeholder="Ex. 10"
+                                            (keypress)="onlyNumbersInput($event, true)" (keyup)="totalAmountPaid()">
+                                            <mat-error *ngIf="errorMessage('quantity')">
+                                                A quantidade é obrigatória!
+                                            </mat-error>
+
+                                        </mat-form-field>
+                                        <mat-form-field class="fields" id="buy-value" appearance="outline">
+                                            <mat-label>Valor total da compra</mat-label>
+                                            <input formControlName="buyValue" matInput #buy_value readonly>
+                                        </mat-form-field>
+
+                                        <mat-form-field class="fields" id="percentage" appearance="outline">
+                                            <mat-label>Margem de lucro</mat-label>
+                                            <input formControlName="percentage" matInput #percentage
+                                                placeholder="Ex 20%" (keypress)="onlyNumbersInput($event)" (keyup)="salePrice(percentage.value)">
+                                            <mat-error *ngIf="errorMessage('percentage')">
+                                                A margem de lucro é obrigatória!
+                                            </mat-error>
+
+                                        </mat-form-field>
+                                        <mat-form-field class="fields" id="sell-value" appearance="outline">
+                                            <mat-label>Valor de venda cada produto</mat-label>
+                                            <input formControlName="sellValue" matInput #sell_value readonly>
+                                        </mat-form-field>
+
+                                    </form>
+                                </div>
+                            </mat-card-content>
+                            <mat-card-actions>
+                                <button id="save-button" mat-raised-button color="primary" (click)="saveEdit(product)">Salvar</button>
+                                <button id="save-button" mat-raised-button color="accent" (click)="products.id = products.id === product.id  ? null : product.id">Cancelar</button>
+                                <!-- <button id="save-button" mat-raised-button color="warn" (click)="deleteProduct(product)">Deletar</button> -->
+                                <button id="save-button" mat-raised-button color="warn" (click)="openDialog('300ms', '200ms')">Deletar</button>
+                            </mat-card-actions>
+                        </div>
+                        
+                        <!-- ********************************************** -->
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand;sticky:true"></tr>
+            <tr mat-row *matRowDef="let product; columns: columnsToDisplayWithExpand;"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            <tr mat-footer-row *matFooterRowDef="columnsToDisplayWithExpand; sticky: true"></tr>
         </table>
     </section>
 
