@@ -28,7 +28,6 @@ export class FormatValuesService {
     let amountPaid = Number(value.replaceAll(',', '.').replaceAll('R$', ''));
     let finalPrice = ((percentage / 100) * amountPaid) + amountPaid;
     let totalFormated = this.currencyPipe.transform(finalPrice, 'BRL', 'symbol');
-    console.log(totalFormated)
     return totalFormated;
   }
 

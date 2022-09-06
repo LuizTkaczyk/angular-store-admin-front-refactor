@@ -1,4 +1,5 @@
-import { DialogBoxComponent } from './../dialog-box/dialog-box.component';
+import { AlertsService } from './../../shared/alerts.service';
+import { DialogService } from './../../shared/dialog.service';
 import { SocketService } from './../../shared/socket.service';
 import { FormatValuesService } from './../../shared/format-values.service';
 import { Product } from './../../models/product.model';
@@ -9,7 +10,6 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Route } from 'src/app/shared/app-const';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CurrencyPipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-list',
@@ -43,7 +43,8 @@ export class ListComponent implements OnInit {
     private currencyPipe: CurrencyPipe,
     private formatValue: FormatValuesService,
     private socket: SocketService,
-    public dialog : MatDialog
+    private dialog: DialogService,
+    private alert: AlertsService
   ) {
 
     this.formEdit = this.formBuilder.group({
@@ -110,24 +111,29 @@ export class ListComponent implements OnInit {
       productEdit.sell_value = product.sell_value;
       productEdit.quantity = product.quantity;
       productEdit.buy_value = product.buy_value;
-      productEdit.id = 0
+      productEdit.id = 0;
+
+      this.alert.showInfoMessage('Produto editado com sucesso', 'Editar');
 
     })
   }
 
   deleteProduct(product: any) {
-    this.products = this.products.filter((prod) => prod.id !== product.id);
-    //this.sharedService.delete(Route.PRODUCT, product.id).subscribe()
+    this.dialog.openDialog('Deseja deletar este produto ?', '300ms', '200ms').afterClosed().subscribe((res) => {
+      if (res) {
+        this.products = this.products.filter((prod) => prod.id !== product.id);
+        this.sharedService.delete(Route.PRODUCT, product.id).subscribe((res) => {
+          if (res.message) {
+            this.alert.showSuccessMessage('Produto deletado com sucesso', 'Deletar');
+          } else {
+            this.alert.showErrorMessage('Erro ao deletar produto!', 'Erro')
+          }
+        });
+      }
+    });
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string){
-    this.dialog.open(DialogBoxComponent, {
-    
-      width:'250px',
-      enterAnimationDuration,
-      exitAnimationDuration
-    })
-  }
+
   errorMessage(input?: any) {
     return this.formEdit.controls[input].hasError('required');
   }

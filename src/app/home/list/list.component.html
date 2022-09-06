@@ -144,7 +144,7 @@
                                 <button id="save-button" mat-raised-button color="primary" (click)="saveEdit(product)">Salvar</button>
                                 <button id="save-button" mat-raised-button color="accent" (click)="products.id = products.id === product.id  ? null : product.id">Cancelar</button>
                                 <!-- <button id="save-button" mat-raised-button color="warn" (click)="deleteProduct(product)">Deletar</button> -->
-                                <button id="save-button" mat-raised-button color="warn" (click)="openDialog('300ms', '200ms')">Deletar</button>
+                                <button id="save-button" mat-raised-button color="warn" (click)="deleteProduct(product)">Deletar</button>
                             </mat-card-actions>
                         </div>
                         

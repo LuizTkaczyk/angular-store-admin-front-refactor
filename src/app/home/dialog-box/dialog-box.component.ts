@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-box',
@@ -8,9 +8,16 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class DialogBoxComponent implements OnInit {
 
-  constructor(public dialogRef : MatDialogRef<DialogBoxComponent>) { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data,
+    public dialogRef: MatDialogRef<DialogBoxComponent>
+    ) { }
 
   ngOnInit(): void {
+  }
+
+  closeDialog(){
+    this.dialogRef.close(false);
   }
 
 }

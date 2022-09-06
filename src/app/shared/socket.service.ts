@@ -13,26 +13,26 @@ export class SocketService {
   constructor(private emmiter: EventEmitterService) { }
 
   start() {
-    this.echo = new Echo({
-      broadcaster: 'socket.io',
-      host: environment.echoServer,
-    })
+    // this.echo = new Echo({
+    //   broadcaster: 'socket.io',
+    //   host: environment.echoServer,
+    // })
 
-    this.echo.connector.socket.on('connect', function () {
-      console.log('CONNECTED');
-    });
+    // this.echo.connector.socket.on('connect', function () {
+    //   console.log('CONNECTED');
+    // });
 
-    this.echo.connector.socket.on('reconnecting', function () {
-      console.log('CONNECTING');
-    });
+    // this.echo.connector.socket.on('reconnecting', function () {
+    //   console.log('CONNECTING');
+    // });
 
-    this.echo.connector.socket.on('disconnect', function () {
-      console.log('DISCONNECTED');
-    });
+    // this.echo.connector.socket.on('disconnect', function () {
+    //   console.log('DISCONNECTED');
+    // });
 
-    this.echo.channel('update-product').listen('.update.product', (data: any) => {
-      this.emmiter.dataEvent.emit(data.product);
-      //console.log(data);
-    });
+    // this.echo.channel('update-product').listen('.update.product', (data: any) => {
+    //   this.emmiter.dataEvent.emit(data.product);
+    //   //console.log(data);
+    // });
   }
 }
