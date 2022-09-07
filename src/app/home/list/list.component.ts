@@ -34,7 +34,6 @@ export class ListComponent implements OnInit {
   products: any;
   totalBuy: number = 0;
   totalQuantity: number = 0;
-  teste;
 
   constructor(
     private sharedService: SharedService,
@@ -79,12 +78,12 @@ export class ListComponent implements OnInit {
   }
 
   editItem(product: Product) {
-    this.sharedService.getProduct(Route.PRODUCT, product).subscribe((product: Product) => {
+    this.sharedService.getProduct(Route.PRODUCT, product.id).subscribe((product: Product) => {
       this.formEdit.controls['name'].setValue(product.name);
-      this.formEdit.controls['value'].setValue(this.currencyPipe.transform(Number(product.value), 'BRL', 'symbol'));
+      this.formEdit.controls['value'].setValue(this.currencyPipe.transform(product.value, '', '', '1.2-2'));
       this.formEdit.controls['quantity'].setValue(product.quantity);
-      this.formEdit.controls['sellValue'].setValue(this.currencyPipe.transform(Number(product.sell_value), 'BRL', 'symbol'));
-      this.formEdit.controls['buyValue'].setValue(this.currencyPipe.transform(Number(product.buy_value), 'BRL', 'symbol'));
+      this.formEdit.controls['sellValue'].setValue(this.currencyPipe.transform(product.sell_value, '', '', '1.2-2',));
+      this.formEdit.controls['buyValue'].setValue(this.currencyPipe.transform(product.buy_value,'','', '1.2-2'));
       this.formEdit.controls['percentage'].setValue(product.percentage);
     })
 
@@ -99,10 +98,10 @@ export class ListComponent implements OnInit {
     })
     this.sharedService.update(Route.PRODUCT, productEdit.id, this.formEdit.value).subscribe((product: Product) => {
       this.formEdit.controls['name'].setValue(product.name);
-      this.formEdit.controls['value'].setValue(this.currencyPipe.transform(Number(product.value), 'BRL', 'symbol'));
+      this.formEdit.controls['value'].setValue(product.value);
       this.formEdit.controls['quantity'].setValue(product.quantity);
-      this.formEdit.controls['sellValue'].setValue(this.currencyPipe.transform(Number(product.sell_value), 'BRL', 'symbol'));
-      this.formEdit.controls['buyValue'].setValue(this.currencyPipe.transform(Number(product.buy_value), 'BRL', 'symbol'));
+      this.formEdit.controls['sellValue'].setValue(product.sell_value);
+      this.formEdit.controls['buyValue'].setValue(product.buy_value);
       this.formEdit.controls['percentage'].setValue(product.percentage);
 
       productEdit.name = product.name;
@@ -111,7 +110,6 @@ export class ListComponent implements OnInit {
       productEdit.sell_value = product.sell_value;
       productEdit.quantity = product.quantity;
       productEdit.buy_value = product.buy_value;
-      productEdit.id = 0;
 
       this.alert.showInfoMessage('Produto editado com sucesso', 'Editar');
 

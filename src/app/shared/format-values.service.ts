@@ -10,7 +10,7 @@ export class FormatValuesService {
 
   formatCurrency(value: any) {
     value = value.replaceAll(',', '.');
-    let formatedValue = this.currencyPipe.transform(Number(value), 'BRL', 'symbol');
+    let formatedValue = value;
     return formatedValue;
   }
 
@@ -18,8 +18,8 @@ export class FormatValuesService {
     if(value){
       let valueAmount = value.replaceAll('R$', '').replaceAll(',', '.');
       let total = valueAmount * quantity;
-      let totalFormated = this.currencyPipe.transform(Number(total), 'BRL', 'symbol');
-      return totalFormated;
+      let totalFormated = total;
+      return totalFormated.toFixed(2);
     }
     return;
   }
@@ -27,8 +27,8 @@ export class FormatValuesService {
   salePrice(percentage: any, value:any) {
     let amountPaid = Number(value.replaceAll(',', '.').replaceAll('R$', ''));
     let finalPrice = ((percentage / 100) * amountPaid) + amountPaid;
-    let totalFormated = this.currencyPipe.transform(finalPrice, 'BRL', 'symbol');
-    return totalFormated;
+    let totalFormated = finalPrice;
+    return totalFormated.toFixed(2);
   }
 
   onlyNumbersInput(event: any, float?: boolean) {

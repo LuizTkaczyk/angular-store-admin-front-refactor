@@ -10,7 +10,6 @@
             <ng-container matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef>Produto</th>
                 <td mat-cell *matCellDef="let product" class="products-row"> {{product.name}} </td>
-                <td mat-footer-cell *matFooterCellDef class="products-row"> Totais </td>
             </ng-container>
 
 
@@ -18,7 +17,6 @@
                 <th mat-header-cell *matHeaderCellDef matTooltip="Valor pago no fornecedor do produto.">Valor compra
                 </th>
                 <td mat-cell *matCellDef="let product" class="products-row"> {{product.value | currency}} </td>
-                <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="percentage">
@@ -58,21 +56,19 @@
             <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef>Código</th>
                 <td mat-cell *matCellDef="let product" class="products-row"> {{product.code}} </td>
-                <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="expand">
-                <th mat-header-cell *matHeaderCellDef aria-label="row actions">Editar</th>
+                <th mat-header-cell *matHeaderCellDef >Editar</th>
                 <td mat-cell *matCellDef="let product" class="products-row">
-                    <button mat-icon-button aria-label="expand row"
+                    <button mat-icon-button (click)="editItem(product)" 
                         matTooltip="Opções para editar ou excluir o produto."
-                        (click)="products.id = products.id === product.id  ? null : product.id; $event.stopPropagation() ; ">
-                        <mat-icon *ngIf="products.id !== product.id" (click)="editItem(product.id)">keyboard_arrow_down
+                        (click)="products.id = products.id === product.id  ? 10 : product.id " >
+                        <mat-icon *ngIf="products.id !== product.id" >keyboard_arrow_down
                         </mat-icon>
                         <mat-icon *ngIf="products.id === product.id">keyboard_arrow_up</mat-icon>
                     </button>
                 </td>
-                <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
@@ -102,7 +98,7 @@
                                         <mat-form-field class="fields" id="value" appearance="outline">
                                             <mat-label>Valor pago</mat-label>
                                             <input formControlName="value" matInput #value placeholder="Ex. 21,99"
-                                            (blur)="formatCurrency(value.value)"
+                                            (keyup)="formatCurrency(value.value)"
                                             (keypress)="onlyNumbersInput($event)">
                                             <mat-error *ngIf="errorMessage('value')">
                                                 O valor pago é obrigatorio!
@@ -141,7 +137,7 @@
                                 </div>
                             </mat-card-content>
                             <mat-card-actions>
-                                <button id="save-button" mat-raised-button color="primary" (click)="saveEdit(product)">Salvar</button>
+                                <button id="save-button" mat-raised-button color="primary" (click)="saveEdit(product);products.id = products.id === product.id  ? null : product.id">Salvar</button>
                                 <button id="save-button" mat-raised-button color="accent" (click)="products.id = products.id === product.id  ? null : product.id">Cancelar</button>
                                 <!-- <button id="save-button" mat-raised-button color="warn" (click)="deleteProduct(product)">Deletar</button> -->
                                 <button id="save-button" mat-raised-button color="warn" (click)="deleteProduct(product)">Deletar</button>
@@ -156,7 +152,6 @@
             <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand;sticky:true"></tr>
             <tr mat-row *matRowDef="let product; columns: columnsToDisplayWithExpand;"></tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-            <tr mat-footer-row *matFooterRowDef="columnsToDisplayWithExpand; sticky: true"></tr>
         </table>
     </section>
 
