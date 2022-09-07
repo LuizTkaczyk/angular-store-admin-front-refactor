@@ -1,3 +1,4 @@
+import { $localize } from '@angular/localize/init';
 import { AlertsService } from './../../shared/alerts.service';
 import { DialogService } from './../../shared/dialog.service';
 import { SocketService } from './../../shared/socket.service';
@@ -10,6 +11,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Route } from 'src/app/shared/app-const';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CurrencyPipe } from '@angular/common';
+import { PageEvent, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list',
@@ -27,7 +29,7 @@ export class ListComponent implements OnInit {
   @ViewChild('value') value: any = ElementRef;
   @ViewChild('name') name: any = ElementRef;
 
-  displayedColumns = ['product', 'value', 'percentage', 'sell_value', 'quantity', 'buy_value', 'code'];
+  displayedColumns = ['id', 'product', 'value', 'percentage', 'sell_value', 'quantity', 'buy_value', 'code'];
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
   formEdit: FormGroup;
 
@@ -35,15 +37,24 @@ export class ListComponent implements OnInit {
   totalBuy: number = 0;
   totalQuantity: number = 0;
 
+  // paginator
+  length;
+  pageSize = 10;
+  pageIndex;
+  pageSizeOptions = [5, 10, 15, 20, 30];
+  showFirstLastButtons = true;
+
+
   constructor(
     private sharedService: SharedService,
     private event: EventEmitterService,
     private formBuilder: FormBuilder,
     private currencyPipe: CurrencyPipe,
     private formatValue: FormatValuesService,
-    private socket: SocketService,
+    //private socket: SocketService,
     private dialog: DialogService,
-    private alert: AlertsService
+    private alert: AlertsService,
+    private pagesIntl: MatPaginatorIntl
   ) {
 
     this.formEdit = this.formBuilder.group({
@@ -54,21 +65,35 @@ export class ListComponent implements OnInit {
       percentage: [null, Validators.required],
       sellValue: [null]
     })
-  }
 
+
+  }
 
   ngOnInit(): void {
-    this.getProducts();
+    //this.getProducts();
     this.sumTotalProducts();
     //this.socket.start();
-  }
-
-  getProducts() {
-    this.sharedService.get(Route.PRODUCT).subscribe((data) => {
-      this.products = data;
-    })
+    this.getPaginate();
+    this.paginatorIntl();
 
   }
+
+  paginatorIntl() {
+    this.pagesIntl.firstPageLabel = 'Primeira página';
+    this.pagesIntl.lastPageLabel = 'Última página';
+    this.pagesIntl.nextPageLabel = 'Próxima página';
+    this.pagesIntl.previousPageLabel = 'Página anterior';
+    this.pagesIntl.itemsPerPageLabel = 'Itens por página';
+
+  }
+
+  // getProducts() {
+  //   this.sharedService.get(Route.PRODUCT).subscribe((data) => {
+  //     this.length = data['length'];
+  //     this.products = data;
+  //   })
+
+  // }
 
   sumTotalProducts() {
     this.sharedService.get(Route.SUM_VALUES).subscribe((data: any) => {
@@ -83,7 +108,7 @@ export class ListComponent implements OnInit {
       this.formEdit.controls['value'].setValue(this.currencyPipe.transform(product.value, '', '', '1.2-2'));
       this.formEdit.controls['quantity'].setValue(product.quantity);
       this.formEdit.controls['sellValue'].setValue(this.currencyPipe.transform(product.sell_value, '', '', '1.2-2',));
-      this.formEdit.controls['buyValue'].setValue(this.currencyPipe.transform(product.buy_value,'','', '1.2-2'));
+      this.formEdit.controls['buyValue'].setValue(this.currencyPipe.transform(product.buy_value, '', '', '1.2-2'));
       this.formEdit.controls['percentage'].setValue(product.percentage);
     })
 
@@ -164,6 +189,20 @@ export class ListComponent implements OnInit {
 
   salePrice(percentage: any) {
     this.formEdit.controls['sellValue'].setValue(this.formatValue.salePrice(percentage, this.formEdit.controls['value'].value));
+  }
+
+  // paginator
+  handlePageEvent(event: PageEvent) {
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.getPaginate(event.pageIndex + 1);
+  }
+
+  getPaginate(index?) {
+    this.sharedService.getPaginate(Route.PAGINATE, index, this.pageSize).subscribe((data) => {
+      this.length = data.total;
+      this.products = data.data;
+    })
   }
 
 }

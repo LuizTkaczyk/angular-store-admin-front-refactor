@@ -49,11 +49,12 @@ export class SharedService {
     return this.httpService.get<Product>(this.apiURL + `${route}` + `${id}`)
   }
 
-  // getPaginate(route:string, page:number, perpage:number):Observable<any>{
-  //   const params = new HttpParams({
-  //     fromObject:{page, perpage}
-  //   })
-  //   return this.httpService.get(this.apiURL+`${route}`, {params : params ? params : null})
-  // }
+  getPaginate(route:string, page:number, perPage:number):Observable<any>{
+    const params:any = new HttpParams({
+      fromObject:{page, perPage}
+    })
+    // return this.httpService.get(this.apiURL+`${route}`, {params : params ? params : null})
+    return this.httpService.get(this.apiURL + route , {params: params});
+  }
 
 }

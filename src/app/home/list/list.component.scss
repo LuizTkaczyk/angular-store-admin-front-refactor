@@ -5,6 +5,7 @@
 table {
   width: 100%;
   background: #e1d7d7;
+  padding: 0 10px;
 }
 
 .container {
@@ -12,7 +13,7 @@ table {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  
+
   .section-table {
     overflow: auto;
     height: calc(80vh - 3px);
@@ -42,11 +43,11 @@ td.mat-cell:first-of-type {
   padding-left: 0;
 }
 
-th.mat-header-cell:last-of-type{
+th.mat-header-cell:last-of-type {
   padding-right: 0;
 }
 
-th.mat-header-cell:first-of-type{
+th.mat-header-cell:first-of-type {
   padding-left: 0;
 }
 
@@ -102,11 +103,12 @@ tr.example-element-row:not(.example-expanded-row):active {
   opacity: 0.5;
 }
 
-.mat-icon-button i, .mat-icon-button .mat-icon{
+.mat-icon-button i,
+.mat-icon-button .mat-icon {
   margin: 0 auto;
 }
 
-.products-row{
+.products-row {
   text-align: center;
 }
 
@@ -115,25 +117,25 @@ tr.example-element-row:not(.example-expanded-row):active {
   margin: 0 0px !important; // for example to remove the margin
 }
 
-.edit-container{
+.edit-container {
   margin: 15px;
   width: 100%;
 }
 
-.fields{
+.fields {
   margin-right: 10px;
   width: 130px;
 }
 
-#name{
+#name {
   width: 250px;
 }
 
-.edit-row{
+.edit-row {
   width: 80px;
 }
 
-.expand-element-detail{
+.expand-element-detail {
   background-color: #78787840;
 }
 
@@ -145,4 +147,13 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .mat-card:not([class*=mat-elevation-z]) {
   box-shadow: unset;
+}
+
+.paginator {
+  bottom: 1px;
+  position: sticky;
+}
+
+.spinner {
+  margin: auto auto;
 }
